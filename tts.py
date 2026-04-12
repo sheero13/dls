@@ -23,7 +23,7 @@
 
 # print("All word audio files ready!\n")
 
-# sentence = "welcome please select the ticket"
+# sentence = "please select confirm"
 # words = sentence.lower().split()
 
 # print("Input words:", words)
@@ -49,3 +49,54 @@
 #     display(Audio(output_file))
 # except:
 #     print("Playback not supported here. Open output.mp3 manually.")
+
+#----------------------------------------------------------------------------------------------------------
+
+# import os
+# import random
+# import numpy as np
+# from IPython.display import Audio, display
+# from pydub import AudioSegment
+
+# DATA_PATH = r"free-spoken-digit-dataset\recordings"   
+
+
+# def get_audio_for_digit(digit):
+#     digit = str(digit)
+    
+#     files = [f for f in os.listdir(DATA_PATH) if f.startswith(digit + "_")]
+    
+#     if not files:
+#         raise ValueError(f"No audio found for digit {digit}")
+    
+#     chosen_file = random.choice(files)
+#     return os.path.join(DATA_PATH, chosen_file)
+
+
+# def generate_tts_audio(number_string):
+#     combined = AudioSegment.empty()
+    
+#     for digit in number_string:
+#         file_path = get_audio_for_digit(digit)
+#         sound = AudioSegment.from_wav(file_path)
+        
+#         combined += sound + AudioSegment.silent(duration=200)  
+    
+#     return combined
+
+
+# print("\n--- DIGIT TTS USING DATASET ---\n")
+
+# num = input("Enter a number (e.g., 36789): ")
+
+# if not num.isdigit():
+#     print("Please enter only digits!")
+# else:
+#     tts_audio = generate_tts_audio(num)
+    
+#     output_file = "output_tts.wav"
+#     tts_audio.export(output_file, format="wav")
+    
+#     print("Playing generated audio...")
+    
+#     display(Audio(output_file))
