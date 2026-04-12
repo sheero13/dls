@@ -1,33 +1,32 @@
-#train
+# # TRAIN
 
 # import os
 # os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 # os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
 # import numpy as np
-# import pickle
 # from tensorflow.keras.datasets import imdb
 # from tensorflow.keras.preprocessing.sequence import pad_sequences
 # from tensorflow.keras.models import Sequential
-# from tensorflow.keras.layers import Embedding, SimpleRNN, Dense
+# from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout
 
 # print("Loading IMDB dataset...")
 
-# vocab_size = 10000  
+# vocab_size = 10000
+# max_len = 200
 
 # (X_train, y_train), (X_test, y_test) = imdb.load_data(num_words=vocab_size)
-
-# print("Training samples:", len(X_train))
-# print("Testing samples:", len(X_test))
-
-# max_len = 200
 
 # X_train = pad_sequences(X_train, maxlen=max_len)
 # X_test = pad_sequences(X_test, maxlen=max_len)
 
 # model = Sequential([
-#     Embedding(vocab_size, 32, input_length=max_len),
-#     SimpleRNN(32),
+#     Embedding(vocab_size, 64, input_length=max_len),
+
+#     LSTM(64, return_sequences=False),   
+
+#     Dropout(0.5),                     
+
 #     Dense(1, activation="sigmoid")
 # ])
 
@@ -44,17 +43,17 @@
 # model.fit(
 #     X_train,
 #     y_train,
-#     epochs=5,
+#     epochs=3,              
 #     batch_size=64,
 #     validation_data=(X_test, y_test)
 # )
+
 # model.save("imdb_rnn_model.h5")
 
 # print("Model saved successfully!")
 
 #-----------------------------------------------------------------------------------------------------------
-
-#test
+# TEST
 
 # import os
 # os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
@@ -65,23 +64,28 @@
 # from tensorflow.keras.preprocessing.sequence import pad_sequences
 # from tensorflow.keras.models import load_model
 
-# model = load_model("imdb_rnn_model.h5")
+# model = load_model(r"imdb_rnn_model.h5")
 
 # vocab_size = 10000
 # max_len = 200
 
 # word_index = imdb.get_word_index()
 
-# reverse_word_index = {value: key for key, value in word_index.items()}
+# word_index = {k: (v + 3) for k, v in word_index.items()}
+# word_index["<PAD>"] = 0
+# word_index["<START>"] = 1
+# word_index["<UNK>"] = 2
 
 # def encode_review(text):
 #     tokens = text.lower().split()
-#     encoded = []
+#     encoded = [1]  
+
 #     for word in tokens:
 #         if word in word_index and word_index[word] < vocab_size:
 #             encoded.append(word_index[word])
 #         else:
-#             encoded.append(2) 
+#             encoded.append(2)
+
 #     return pad_sequences([encoded], maxlen=max_len)
 
 # print("\nSentiment Analyzer Ready (type 'exit' to stop)\n")
@@ -94,11 +98,9 @@
 #     encoded = encode_review(review)
 #     prediction = model.predict(encoded, verbose=0)[0][0]
 
-#     if prediction > 0.5:
-#         print("Sentiment: Positive")
-#     else:
-#         print("Sentiment: Negative")
+#     sentiment = "Positive" if prediction > 0.5 else "Negative"
 
+#     print("Sentiment:", sentiment)
 #     print("Confidence:", float(prediction))
 #     print("-" * 40)
 
